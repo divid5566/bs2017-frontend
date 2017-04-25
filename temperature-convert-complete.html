@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>Temperature convert</title>
+  <!-- Bootstrap core CSS -->
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Custom styles for this template -->
+  <link href="stylesheets/dashboard.css" rel="stylesheet">
+</head>
+
+<body>
+
+  <div w3-include-html="menu.html"></div>
+
+
+  <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-md-12">
+          <ul class="list-unstyled">
+            <li><label><input id="convert-c" type="radio" name="unit" value="c" checked> 攝氏轉換為華氏</label></li>
+            <li><label><input id="convert-f" type="radio" name="unit" value="f"> 華氏轉換為攝氏</label></li>
+          </ul>
+          <div id="buttons">
+            <div class="row">
+              <div class="col-md-4"><a class="btn btn-default btn-block input-pad" href="#" role="button">1</a></div>
+              <div class="col-md-4"><a class="btn btn-default btn-block input-pad" href="#" role="button">2</a></div>
+              <div class="col-md-4"><a class="btn btn-default btn-block input-pad" href="#" role="button">3</a></div>
+            </div>
+            <div class="row">
+              <div class="col-md-4"><a class="btn btn-default btn-block input-pad" href="#" role="button">4</a></div>
+              <div class="col-md-4"><a class="btn btn-default btn-block input-pad" href="#" role="button">5</a></div>
+              <div class="col-md-4"><a class="btn btn-default btn-block input-pad" href="#" role="button">6</a></div>
+            </div>
+            <div class="row">
+              <div class="col-md-4"><a class="btn btn-default btn-block input-pad" href="#" role="button">7</a></div>
+              <div class="col-md-4"><a class="btn btn-default btn-block input-pad" href="#" role="button">8</a></div>
+              <div class="col-md-4"><a class="btn btn-default btn-block input-pad" href="#" role="button">9</a></div>
+            </div>
+            <div class="row">
+              <div class="col-md-4"><a class="btn btn-default btn-block input-pad" href="#" role="button">0</a></div>
+              <div class="col-md-4"><a class="btn btn-default btn-block input-pad" href="#" role="button">.</a></div>
+            </div>
+          </div>
+          <br>
+
+          <div class="input-group">
+            <input id="input" class="form-control text-right" type="text" name="temperature" value="0">
+            <span class="input-group-btn">
+                    <a id="convert" type="button" class="btn btn-default">轉換</a>
+                    <a id="clear" type="button" class="btn btn-default">清除</a>
+                  </span>
+          </div>
+          <br>
+
+          <div class="input-group">
+            <span class="input-group-addon" id="sizing-addon1">結果</span>
+            <input id="result" class="form-control text-right" type="number" name="temperature" value="0" readonly>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+  </div>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <script src="https://www.w3schools.com/lib/w3data.js"></script> 
+  <script>w3IncludeHTML();</script>
+  <script>
+    $(function () {
+
+      // put your codes here.
+      $("#convert").click(function () {
+        var $input = $("#input"),
+          $result = $("#result"),
+          $convertC = $("#convert-c"),
+          $convertF = $("#convert-f"),
+          r = 0;
+
+        if ($convertC.prop("checked")) {
+          r = ($input.val() * 1.8) + 32;
+        } else if ($convertF.prop("checked")) {
+          r = ($input.val() - 32) / 1.8;
+        }
+
+        $result.val(r);
+      });
+
+      $("#clear").click(function () {
+        $("#input").val("");
+        $("#result").val("");
+      });
+
+      $(".input-pad").click(function () {
+        var $this = $(this),
+          $input = $("#input");
+
+        $input.val($input.val() + $this.text());
+      });
+
+    });
+  </script>
+</body>
+
+</html>

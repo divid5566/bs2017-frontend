@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>累進稅率</title>
+  <!-- Bootstrap core CSS -->
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Custom styles for this template -->
+  <link href="stylesheets/dashboard.css" rel="stylesheet">
+</head>
+
+<body>
+
+  <div w3-include-html="menu.html"></div>
+  <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+    <h2>累進稅率</h2>
+    <p>
+      <div class="input-group">
+        <input id="total-income" class="form-control" type="number" name="total-income" value="0">
+        <span class="input-group-btn">
+                <a id="compute" type="button" class="btn btn-primary">計算稅額</a>
+              </span>
+      </div>
+    </p>
+
+    <ul id="results" class="list-group">
+      <!--
+            <li class="list-group-item">
+              <p>
+                <em>2000/1/1</em> 的你，星座是 <em>獅子座</em>
+              </p>
+              <p>
+                你的生命靈數：<br>
+                1. 你是Leo獅子座中最為自我的，但可能因此造成人際問題。
+              </p>
+            </li>
+            -->
+    </ul>
+
+  </div>
+  </div>
+  </div>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <script src="https://www.w3schools.com/lib/w3data.js"></script> 
+  <script>w3IncludeHTML();</script>
+  <script>
+    var taxRateLookup = [{
+        income: 10310001,
+        rate: .5
+      },
+      {
+        income: 4530001,
+        rate: .4
+      },
+      {
+        income: 2420001,
+        rate: .3
+      },
+      {
+        income: 1210001,
+        rate: .2
+      },
+      {
+        income: 540001,
+        rate: .12
+      },
+      {
+        income: 0,
+        rate: .05
+      },
+    ];
+
+    $("#compute").click(function () {
+      computeTax();
+    });
+
+    function computeTax() {
+      var myTotalIncome = $("#total-income").val();
+      var myTaxRate = 0;
+
+      for (var i = 0; i < taxRateLookup.length; i++) {
+        var level = taxRateLookup[i];
+
+        if (myTotalIncome >= level.income) {
+          myTaxRate = level.rate;
+          break;
+        }
+      }
+
+      var shouldPayTax = Math.ceil(myTotalIncome * myTaxRate);
+
+      var html = "<p>總收入: " + myTotalIncome +
+        "，稅率: " + myTaxRate + "，應繳: " +
+        shouldPayTax + "</p>";
+
+      $("<li></li>")
+        .addClass("list-group-item")
+        .html(html)
+        .prependTo("#results");
+    }
+
+    $("#total-income").keyup(function (event) {
+      if (event.keyCode == 13) {
+        computeTax();
+      }
+    });
+  </script>
+</body>
+
+</html>

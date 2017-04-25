@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Guess number</title>
+    <!-- Bootstrap core CSS -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom styles for this template -->
+    <link href="stylesheets/dashboard.css" rel="stylesheet">
+  </head>
+
+  <body>
+
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">Project name</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="#">Dashboard</a></li>
+            <li><a href="#">Settings</a></li>
+            <li><a href="#">Profile</a></li>
+            <li><a href="#">Help</a></li>
+          </ul>
+          <form class="navbar-form navbar-right">
+            <input type="text" class="form-control" placeholder="Search...">
+          </form>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-sm-3 col-md-2 sidebar">
+          <ul class="nav nav-sidebar">
+            <li class="active"><a href="#">Overview <span class="sr-only">(current)</span></a></li>
+            <li><a href="#">Reports</a></li>
+            <li><a href="#">Analytics</a></li>
+            <li><a href="#">Export</a></li>
+          </ul>
+          <ul class="nav nav-sidebar">
+            <li><a href="">Nav item</a></li>
+            <li><a href="">Nav item again</a></li>
+            <li><a href="">One more nav</a></li>
+            <li><a href="">Another nav item</a></li>
+            <li><a href="">More navigation</a></li>
+          </ul>
+          <ul class="nav nav-sidebar">
+            <li><a href="">Nav item again</a></li>
+            <li><a href="">One more nav</a></li>
+            <li><a href="">Another nav item</a></li>
+          </ul>
+        </div>
+        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+          <div class="container-fluid">
+            <div class="row">
+              <div class="col-md-12">
+                <div class="btn-group btn-group-justified">
+                  <a id="start" type="button" class="btn btn-default">開始</a>
+                  <a id="restart" type="button" class="btn btn-default">放棄重來</a>
+                  <a id="cheat" type="button" class="btn btn-default">看答案</a>
+                </div>
+                <br>
+                <ul id="guessResults" class="list-group">
+                  <!--
+                  <li class="list-group-item">
+                    <span class="label label-danger">0A1B</span>
+                    1234
+                  </li>
+                  -->
+                </ul>
+                <div class="input-group">
+                  <span class="input-group-addon" id="sizing-addon1">猜答案</span>
+                  <input id="userGuess" type="text" name="" class="form-control" value="" required="required">
+                  <span class="input-group-btn">
+                    <a id="guess" type="button" class="btn btn-default">猜!</a>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>          
+        </div>
+      </div>
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script>
+      $(function () {
+        var answer = "";
+
+        $("#start").click(function () {
+          startGame();
+        });
+
+        $("#restart").click(function () {
+          if (confirm("確定要放棄這局嗎？")) {
+            startGame(); 
+          }
+        });
+
+        $("#cheat").click(function () {
+          alert("哈哈！你猜不到答案是 " + answer + " 吧! XD");
+          startGame(); 
+        });
+
+        $("#userGuess").keyup(function (event) {
+          if (event.keyCode == 13) {
+            doGuess();
+          }
+        });
+
+        $("#guess").click(function (event) {
+            doGuess();
+        });
+
+        function startGame() {
+          $("#guessResults").html("");
+          $("#userGuess").val("");
+          answer = "";  
+
+          while (answer.length < 4) {
+            var number = Math.floor(Math.random() * 10);  // 0~9
+
+            if (answer.indexOf(number) == -1) {
+              answer += number;
+            }
+          }
+          alert("準備好了，開始吧！");
+        }
+
+        function doGuess() {
+          var $userGuess = $("#userGuess");
+          var thisRoundAnswer = $userGuess.val();
+          var aCount = 0, bCount = 0;
+
+          // 輸入正確嗎？(1)
+          if (thisRoundAnswer.length != 4) {
+            alert("輸入錯誤");
+            return;
+          }
+          
+          // 輸入正確嗎？(2)
+          if ( isNaN(thisRoundAnswer) ) 
+          {
+            alert("你得輸入數字才行");
+            return;
+          }
+          
+          // 有重複的數字嗎？
+          var existed = "";
+          for (var i = 0; i < thisRoundAnswer.length; i++) {
+            var number = thisRoundAnswer.charAt(i);
+
+            if (existed.indexOf(number) != -1) {
+              alert("答案中有重複數字");
+              return;
+            }
+
+            var position = answer.indexOf(number);
+
+            if (position == i) {
+              aCount++;
+            }
+            else if (position != -1) {
+              bCount++;
+            }
+
+            existed += thisRoundAnswer.charAt(i);
+          }
+
+          var ab = aCount + "A" + bCount + "B";
+
+          var $li = $("<li></li>").addClass("list-group-item");
+
+          if (aCount == 4) {
+            $li
+              .html("<span class=\"label label-success\">" + ab + "</span> " + thisRoundAnswer)
+              .appendTo("#guessResults")
+
+            alert("你真厲害，答對了！來玩下一局吧");
+          }
+          else {
+            $li
+              .html("<span class=\"label label-danger\">" + ab + "</span> " + thisRoundAnswer)
+              .appendTo("#guessResults")
+          }
+        }
+
+        startGame();
+      });
+
+    </script>
+  </body>
+</html>
